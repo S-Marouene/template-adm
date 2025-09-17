@@ -63,7 +63,7 @@ A modern, responsive admin dashboard built with Laravel 12, Livewire, and Flux U
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/template-adm.git
+   git clone https://github.com/S-Marouene/template-adm.git
    cd template-adm
    ```
 
