@@ -5,19 +5,25 @@ namespace App\Livewire\Users;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('components.layouts.app')]
 class Edit extends Component
 {
+    use WithFileUploads;
     public User $user;
     public string $name = '';
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $phone = '';
+    public string $address = '';
+    public $profile_picture;
     public array $selectedRoles = [];
 
     public function mount(User $user): void
@@ -25,6 +31,8 @@ class Edit extends Component
         $this->user = $user;
         $this->name = $user->name;
         $this->email = $user->email;
+        $this->phone = $user->phone ?? '';
+        $this->address = $user->address ?? '';
         $this->selectedRoles = $user->roles->pluck('id')->toArray();
     }
 
@@ -40,6 +48,9 @@ class Edit extends Component
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user->id),
             ],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:500'],
+            'profile_picture' => ['nullable', 'image', 'max:2048'], // 2MB max
             'selectedRoles' => ['array'],
             'selectedRoles.*' => ['exists:roles,id'],
         ];
@@ -58,6 +69,17 @@ class Edit extends Component
             unset($validated['password']);
         }
 
+        // Handle profile picture upload
+        if ($this->profile_picture) {
+            // Delete old profile picture if exists
+            if ($this->user->profile_picture) {
+                Storage::disk('public')->delete($this->user->profile_picture);
+            }
+            
+            $path = $this->profile_picture->store('profiles', 'public');
+            $validated['profile_picture'] = $path;
+        }
+
         $this->user->update($validated);
         
         // Update user roles
@@ -66,6 +88,16 @@ class Edit extends Component
         session()->flash('status', 'User updated successfully!');
 
         $this->redirect(route('users.index'), navigate: true);
+    }
+
+    public function removeProfilePicture(): void
+    {
+        if ($this->user->profile_picture) {
+            Storage::disk('public')->delete($this->user->profile_picture);
+            $this->user->update(['profile_picture' => null]);
+            
+            session()->flash('status', 'Profile picture removed successfully!');
+        }
     }
 
     public function render()

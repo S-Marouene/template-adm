@@ -5,22 +5,38 @@ namespace App\Livewire\Settings;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Profile extends Component
 {
+    use WithFileUploads;
+    
     public string $name = '';
 
     public string $email = '';
+    
+    public string $phone = '';
+    
+    public string $address = '';
+    
+    public $profile_picture;
+    
+    public $existing_profile_picture = '';
 
     /**
      * Mount the component.
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $user = Auth::user();
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->phone = $user->phone ?? '';
+        $this->address = $user->address ?? '';
+        $this->existing_profile_picture = $user->profile_picture ?? '';
     }
 
     /**
@@ -32,7 +48,6 @@ class Profile extends Component
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-
             'email' => [
                 'required',
                 'string',
@@ -41,7 +56,22 @@ class Profile extends Component
                 'max:255',
                 Rule::unique(User::class)->ignore($user->id),
             ],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:500'],
+            'profile_picture' => ['nullable', 'image', 'max:2048'], // 2MB max
         ]);
+
+        // Handle profile picture upload
+        if ($this->profile_picture) {
+            // Delete old profile picture if exists
+            if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+            
+            // Store new profile picture
+            $path = $this->profile_picture->store('profiles', 'public');
+            $validated['profile_picture'] = $path;
+        }
 
         $user->fill($validated);
 
@@ -50,6 +80,12 @@ class Profile extends Component
         }
 
         $user->save();
+        
+        // Update the existing profile picture for display
+        $this->existing_profile_picture = $user->profile_picture;
+        
+        // Clear the uploaded file
+        $this->profile_picture = null;
 
         $this->dispatch('profile-updated', name: $user->name);
     }
@@ -70,5 +106,22 @@ class Profile extends Component
         $user->sendEmailVerificationNotification();
 
         Session::flash('status', 'verification-link-sent');
+    }
+    
+    /**
+     * Remove the profile picture.
+     */
+    public function removeProfilePicture(): void
+    {
+        $user = Auth::user();
+        
+        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+        
+        $user->update(['profile_picture' => null]);
+        $this->existing_profile_picture = '';
+        
+        $this->dispatch('profile-updated', name: $user->name);
     }
 }

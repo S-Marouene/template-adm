@@ -78,7 +78,9 @@ class Index extends Component
             ->when($this->search, function (Builder $query) {
                 $query->where(function (Builder $subQuery) {
                     $subQuery->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                        ->orWhere('email', 'like', '%' . $this->search . '%')
+                        ->orWhere('phone', 'like', '%' . $this->search . '%')
+                        ->orWhere('address', 'like', '%' . $this->search . '%');
                 });
             })
             ->orderBy($this->sortField, $this->sortDirection);

@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-start mb-4">
@@ -59,6 +63,60 @@
                         @error('password_confirmation')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">{{ __('Phone Number') }}</label>
+                    <input type="tel" class="form-control @error('phone') is-invalid @enderror" id="phone" wire:model="phone" placeholder="{{ __('Enter phone number') }}">
+                    @error('phone')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Address -->
+                <div class="col-md-6">
+                    <label for="address" class="form-label">{{ __('Address') }}</label>
+                    <textarea class="form-control @error('address') is-invalid @enderror" id="address" wire:model="address" placeholder="{{ __('Enter address') }}" rows="3"></textarea>
+                    @error('address')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Profile Picture -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('Profile Picture') }}</label>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            @if ($profile_picture)
+                                <img src="{{ $profile_picture->temporaryUrl() }}" class="rounded-circle" width="80" height="80" alt="Profile preview" style="object-fit: cover;">
+                            @elseif ($user->profile_picture)
+                                <img src="{{ Storage::url($user->profile_picture) }}" class="rounded-circle" width="80" height="80" alt="Current profile" style="object-fit: cover;">
+                            @else
+                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <i class="bi bi-person-fill text-white fs-2"></i>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="col">
+                            <input type="file" class="form-control @error('profile_picture') is-invalid @enderror" id="profile_picture" wire:model="profile_picture" accept="image/*">
+                            <div class="form-text">{{ __('Upload a new profile picture (max 2MB, JPG, PNG, GIF)') }}</div>
+                            @error('profile_picture')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-auto">
+                            @if ($profile_picture)
+                                <button type="button" class="btn btn-outline-danger btn-sm" wire:click="$set('profile_picture', null)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            @elseif ($user->profile_picture)
+                                <button type="button" class="btn btn-outline-danger btn-sm" wire:click="removeProfilePicture" wire:confirm="{{ __('Are you sure you want to remove the profile picture?') }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            @endif
+                        </div>
                     </div>
                 </div>
 

@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-start mb-4">
@@ -15,7 +19,7 @@
     <div class="row mb-4">
         <div class="col-12 col-sm-6">
             <div class="input-group">
-                <input type="text" class="form-control" wire:model.live.debounce.300ms="search" placeholder="{{ __('Search users...') }}">
+                <input type="text" class="form-control" wire:model.live.debounce.300ms="search" placeholder="{{ __('Search users by name, email, phone, or address...') }}">
                 <span class="input-group-text">
                     <i class="bi bi-search"></i>
                 </span>
@@ -26,9 +30,10 @@
     <!-- Users Table -->
     <div class="card shadow-sm">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0" style="min-width: 1200px;">
                 <thead class="table-light">
                     <tr>
+                        <th class="px-3 py-3 fw-medium">{{ __('Photo') }}</th>
                         <th class="px-3 py-3">
                             <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-medium" wire:click="sortBy('name')">
                                 {{ __('Name') }}
@@ -49,6 +54,8 @@
                                 @endif
                             </button>
                         </th>
+                        <th class="px-3 py-3 fw-medium">{{ __('Phone') }}</th>
+                        <th class="px-3 py-3 fw-medium">{{ __('Address') }}</th>
                         <th class="px-3 py-3 fw-medium">{{ __('Email Verified') }}</th>
                         <th class="px-3 py-3 fw-medium">{{ __('Roles') }}</th>
                         <th class="px-3 py-3">
@@ -68,18 +75,34 @@
                     @forelse($users as $user)
                         <tr>
                             <td class="px-3 py-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3">
-                                        <span class="d-flex align-items-center justify-content-center rounded-circle bg-secondary text-white" style="width: 40px; height: 40px; font-size: 0.875rem;">
-                                            {{ $user->initials() }}
-                                        </span>
+                                @if($user->profile_picture)
+                                    <img src="{{ Storage::url($user->profile_picture) }}" class="rounded-circle" width="40" height="40" alt="{{ $user->name }}" style="object-fit: cover;">
+                                @else
+                                    <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-person-fill text-white"></i>
                                     </div>
-                                    <div>
-                                        <div class="fw-medium">{{ $user->name }}</div>
-                                    </div>
-                                </div>
+                                @endif
+                            </td>
+                            <td class="px-3 py-3">
+                                <div class="fw-medium">{{ $user->name }}</div>
                             </td>
                             <td class="px-3 py-3 text-muted">{{ $user->email }}</td>
+                            <td class="px-3 py-3">
+                                @if($user->phone)
+                                    <div class="text-muted">{{ $user->phone }}</div>
+                                @else
+                                    <span class="text-muted small">{{ __('Not provided') }}</span>
+                                @endif
+                            </td>
+                            <td class="px-3 py-3">
+                                @if($user->address)
+                                    <div class="text-muted" style="max-width: 200px;" title="{{ $user->address }}">
+                                        {{ Str::limit($user->address, 50) }}
+                                    </div>
+                                @else
+                                    <span class="text-muted small">{{ __('Not provided') }}</span>
+                                @endif
+                            </td>
                             <td class="px-3 py-3">
                                 @if($user->email_verified_at)
                                     <span class="badge bg-success">{{ __('Verified') }}</span>
@@ -114,7 +137,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
+                            <td colspan="9" class="text-center py-5 text-muted">
                                 {{ __('No users found.') }}
                             </td>
                         </tr>

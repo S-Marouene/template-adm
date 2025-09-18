@@ -1,3 +1,7 @@
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 <nav class="navbar navbar-expand-lg topbar">
     <div class="container-fluid">
         <!-- Left Side - Mobile Toggle -->
@@ -39,16 +43,24 @@
             <!-- User Menu -->
             <div class="dropdown">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
-                    <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.75rem;">
-                        {{ auth()->user()->initials() }}
-                    </span>
+                    @if(auth()->user()->profile_picture)
+                        <img src="{{ Storage::url(auth()->user()->profile_picture) }}" alt="Profile" class="rounded-circle object-fit-cover me-2" style="width: 24px; height: 24px;">
+                    @else
+                        <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.75rem;">
+                            {{ auth()->user()->initials() }}
+                        </span>
+                    @endif
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end" style="min-width: 200px;">
                     <li class="px-3 py-2">
                         <div class="d-flex align-items-center">
-                            <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.875rem;">
-                                {{ auth()->user()->initials() }}
-                            </span>
+                            @if(auth()->user()->profile_picture)
+                                <img src="{{ Storage::url(auth()->user()->profile_picture) }}" alt="Profile" class="rounded-circle object-fit-cover me-2" style="width: 32px; height: 32px;">
+                            @else
+                                <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.875rem;">
+                                    {{ auth()->user()->initials() }}
+                                </span>
+                            @endif
                             <div class="flex-grow-1">
                                 <div class="fw-semibold small">{{ auth()->user()->name }}</div>
                                 <div class="text-muted small">{{ auth()->user()->email }}</div>
@@ -111,18 +123,8 @@ window.applyTheme = function(theme) {
     }
 };
 
-// Initialize theme and event listeners
-function initializeTopbar() {
-    // Theme management
-    const theme = @js(session('theme', 'system'));
-    applyTheme(theme);
-    
-    // Remove existing event listeners to prevent duplicates
-    document.removeEventListener('click', handleTopbarClicks);
-    
-    // Add new event listeners
-    document.addEventListener('click', handleTopbarClicks);
-}
+// Store reference to the click handler to properly remove it
+let topbarClickHandler = null;
 
 // Handle theme and language clicks
 function handleTopbarClicks(e) {
@@ -141,6 +143,22 @@ function handleTopbarClicks(e) {
         const locale = e.target.closest('[data-locale]').dataset.locale;
         Livewire.dispatch('setLanguage', { locale: locale });
     }
+}
+
+// Initialize theme and event listeners
+function initializeTopbar() {
+    // Theme management
+    const theme = @js(session('theme', 'system'));
+    applyTheme(theme);
+    
+    // Remove existing event listener if it exists
+    if (topbarClickHandler) {
+        document.removeEventListener('click', topbarClickHandler);
+    }
+    
+    // Store and add new event listener
+    topbarClickHandler = handleTopbarClicks;
+    document.addEventListener('click', topbarClickHandler);
 }
 
 // Initialize on DOM ready
