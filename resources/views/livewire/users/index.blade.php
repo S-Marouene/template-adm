@@ -1,149 +1,120 @@
-<div class="space-y-6">
+<div class="container-fluid">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="d-flex justify-content-between align-items-start mb-4">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('Users') }}</h1>
-            <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">{{ __('Manage user accounts and permissions') }}</p>
+            <h1 class="h2 fw-semibold mb-2">{{ __('Users') }}</h1>
+            <p class="text-muted mb-0">{{ __('Manage user accounts and permissions') }}</p>
         </div>
-        <flux:button :href="route('users.create')" variant="primary" wire:navigate>
-            <flux:icon name="plus" class="size-4" />
+        <a href="{{ route('users.create') }}" class="btn btn-primary" wire:navigate>
+            <i class="bi bi-plus me-1"></i>
             {{ __('Add User') }}
-        </flux:button>
+        </a>
     </div>
 
     <!-- Search and Filters -->
-    <div class="flex flex-col sm:flex-row gap-4">
-        <div class="flex-1">
-            <flux:input
-                wire:model.live.debounce.300ms="search"
-                placeholder="{{ __('Search users...') }}"
-                clearable
-            >
-                <x-slot name="iconTrailing">
-                    <flux:icon name="magnifying-glass" class="size-4" />
-                </x-slot>
-            </flux:input>
+    <div class="row mb-4">
+        <div class="col-12 col-sm-6">
+            <div class="input-group">
+                <input type="text" class="form-control" wire:model.live.debounce.300ms="search" placeholder="{{ __('Search users...') }}">
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+            </div>
         </div>
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white dark:bg-zinc-800 shadow overflow-hidden sm:rounded-lg">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
-                <thead class="bg-gray-50 dark:bg-zinc-700">
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            <button wire:click="sortBy('name')" class="group inline-flex">
+                        <th class="px-3 py-3">
+                            <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-medium" wire:click="sortBy('name')">
                                 {{ __('Name') }}
                                 @if($sortField === 'name')
-                                    <flux:icon name="{{ $sortDirection === 'asc' ? 'chevron-up' : 'chevron-down' }}" class="ml-2 size-4" />
+                                    <i class="bi bi-chevron-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @else
-                                    <flux:icon name="chevron-up-down" class="ml-2 size-4 opacity-0 group-hover:opacity-100" />
+                                    <i class="bi bi-chevron-expand ms-1 opacity-50"></i>
                                 @endif
                             </button>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            <button wire:click="sortBy('email')" class="group inline-flex">
+                        <th class="px-3 py-3">
+                            <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-medium" wire:click="sortBy('email')">
                                 {{ __('Email') }}
                                 @if($sortField === 'email')
-                                    <flux:icon name="{{ $sortDirection === 'asc' ? 'chevron-up' : 'chevron-down' }}" class="ml-2 size-4" />
+                                    <i class="bi bi-chevron-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @else
-                                    <flux:icon name="chevron-up-down" class="ml-2 size-4 opacity-0 group-hover:opacity-100" />
+                                    <i class="bi bi-chevron-expand ms-1 opacity-50"></i>
                                 @endif
                             </button>
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            {{ __('Email Verified') }}
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            {{ __('Roles') }}
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            <button wire:click="sortBy('created_at')" class="group inline-flex">
+                        <th class="px-3 py-3 fw-medium">{{ __('Email Verified') }}</th>
+                        <th class="px-3 py-3 fw-medium">{{ __('Roles') }}</th>
+                        <th class="px-3 py-3">
+                            <button type="button" class="btn btn-link p-0 text-decoration-none text-dark fw-medium" wire:click="sortBy('created_at')">
                                 {{ __('Created') }}
                                 @if($sortField === 'created_at')
-                                    <flux:icon name="{{ $sortDirection === 'asc' ? 'chevron-up' : 'chevron-down' }}" class="ml-2 size-4" />
+                                    <i class="bi bi-chevron-{{ $sortDirection === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @else
-                                    <flux:icon name="chevron-up-down" class="ml-2 size-4 opacity-0 group-hover:opacity-100" />
+                                    <i class="bi bi-chevron-expand ms-1 opacity-50"></i>
                                 @endif
                             </button>
                         </th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            {{ __('Actions') }}
-                        </th>
+                        <th class="px-3 py-3 text-end fw-medium">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-zinc-800 divide-y divide-gray-200 dark:divide-zinc-700">
+                <tbody>
                     @forelse($users as $user)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-zinc-700">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10">
-                                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-500 text-white text-sm font-medium">
+                        <tr>
+                            <td class="px-3 py-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <span class="d-flex align-items-center justify-content-center rounded-circle bg-secondary text-white" style="width: 40px; height: 40px; font-size: 0.875rem;">
                                             {{ $user->initials() }}
                                         </span>
                                     </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ $user->name }}
-                                        </div>
+                                    <div>
+                                        <div class="fw-medium">{{ $user->name }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                {{ $user->email }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 py-3 text-muted">{{ $user->email }}</td>
+                            <td class="px-3 py-3">
                                 @if($user->email_verified_at)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
-                                        {{ __('Verified') }}
-                                    </span>
+                                    <span class="badge bg-success">{{ __('Verified') }}</span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
-                                        {{ __('Unverified') }}
-                                    </span>
+                                    <span class="badge bg-danger">{{ __('Unverified') }}</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex flex-wrap gap-1">
+                            <td class="px-3 py-3">
+                                <div class="d-flex flex-wrap gap-1">
                                     @forelse($user->roles as $role)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
-                                            {{ $role->display_name }}
-                                        </span>
+                                        <span class="badge bg-primary">{{ $role->display_name }}</span>
                                     @empty
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ __('No roles') }}</span>
+                                        <span class="text-muted small">{{ __('No roles') }}</span>
                                     @endforelse
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                {{ $user->created_at->format('M d, Y') }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <flux:button 
-                                    :href="route('users.edit', $user)" 
-                                    size="sm" 
-                                    variant="subtle" 
-                                    wire:navigate
-                                >
-                                    <flux:icon name="pencil" class="size-4" />
-                                    {{ __('Edit') }}
-                                </flux:button>
-                                
-                                @if($user->id !== auth()->id())
-                                    <flux:button 
-                                        wire:click="confirmDeleteUser({{ $user->id }})" 
-                                        size="sm" 
-                                        variant="danger"
-                                    >
-                                        <flux:icon name="trash" class="size-4" />
-                                        {{ __('Delete') }}
-                                    </flux:button>
-                                @endif
+                            <td class="px-3 py-3 text-muted">{{ $user->created_at->format('M d, Y') }}</td>
+                            <td class="px-3 py-3 text-end">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-outline-primary" wire:navigate>
+                                        <i class="bi bi-pencil me-1"></i>
+                                        {{ __('Edit') }}
+                                    </a>
+                                    @if($user->id !== auth()->id())
+                                        <button type="button" class="btn btn-sm btn-outline-danger" wire:click="confirmDeleteUser({{ $user->id }})">
+                                            <i class="bi bi-trash me-1"></i>
+                                            {{ __('Delete') }}
+                                        </button>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-300">
+                            <td colspan="6" class="text-center py-5 text-muted">
                                 {{ __('No users found.') }}
                             </td>
                         </tr>
@@ -154,7 +125,7 @@
 
         <!-- Pagination -->
         @if($users->hasPages())
-            <div class="px-6 py-3 border-t border-gray-200 dark:border-zinc-700">
+            <div class="card-footer bg-light">
                 {{ $users->links() }}
             </div>
         @endif
@@ -162,33 +133,35 @@
 
     <!-- Delete Confirmation Modal -->
     @if($deleteUserId)
-        <flux:modal :show="$deleteUserId !== null" class="max-w-lg">
-            <div class="space-y-6">
-                <div>
-                    <flux:heading size="lg">{{ __('Delete User') }}</flux:heading>
-                    <flux:subheading>
-                        {{ __('Are you sure you want to delete this user? This action cannot be undone.') }}
-                    </flux:subheading>
-                </div>
-
-                <div class="flex justify-end space-x-3">
-                    <flux:button wire:click="cancelDelete" variant="ghost">
-                        {{ __('Cancel') }}
-                    </flux:button>
-                    <flux:button wire:click="deleteUser" variant="danger">
-                        {{ __('Delete User') }}
-                    </flux:button>
+        <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('Delete User') }}</h5>
+                        <button type="button" class="btn-close" wire:click="cancelDelete"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">{{ __('Are you sure you want to delete this user? This action cannot be undone.') }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" wire:click="cancelDelete">{{ __('Cancel') }}</button>
+                        <button type="button" class="btn btn-danger" wire:click="deleteUser">{{ __('Delete User') }}</button>
+                    </div>
                 </div>
             </div>
-        </flux:modal>
+        </div>
     @endif
 
     <!-- Flash Messages -->
     @if(session('status'))
-        <div class="fixed bottom-4 right-4 z-50">
-            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md shadow-lg dark:bg-green-800 dark:border-green-700 dark:text-green-100">
-                <div class="flex items-center">
-                    <flux:icon name="check-circle" class="size-5 mr-2" />
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+            <div class="toast show" role="alert">
+                <div class="toast-header bg-success text-white">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <strong class="me-auto">{{ __('Success') }}</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
                     {{ session('status') }}
                 </div>
             </div>

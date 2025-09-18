@@ -12,7 +12,6 @@ return [
     'logout' => 'Log Out',
     'profile' => 'Profile',
     'password' => 'Password',
-    'appearance' => 'Appearance',
     
     // Theme
     'light' => 'Light',

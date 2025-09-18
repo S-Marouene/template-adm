@@ -12,7 +12,6 @@ return [
     'logout' => 'تسجيل الخروج',
     'profile' => 'الملف الشخصي',
     'password' => 'كلمة المرور',
-    'appearance' => 'المظهر',
     
     // Theme
     'light' => 'فاتح',

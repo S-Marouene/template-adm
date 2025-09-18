@@ -12,7 +12,6 @@ return [
     'logout' => 'Cerrar sesión',
     'profile' => 'Perfil',
     'password' => 'Contraseña',
-    'appearance' => 'Apariencia',
     
     // Theme
     'light' => 'Claro',

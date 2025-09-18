@@ -1,93 +1,115 @@
-<div class="space-y-6">
+<div class="container-fluid">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ __('Create Permission') }}</h1>
-            <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">{{ __('Add a new system permission') }}</p>
+            <h1 class="h2 text-body-emphasis">{{ __('Create Permission') }}</h1>
+            <p class="text-body-secondary mb-0">{{ __('Add a new system permission') }}</p>
         </div>
-        <flux:button :href="route('permissions.index')" variant="ghost" wire:navigate>
-            <flux:icon name="arrow-left" class="size-4" />
+        <a href="{{ route('permissions.index') }}" class="btn btn-outline-secondary" wire:navigate>
+            <i class="bi bi-arrow-left"></i>
             {{ __('Back to Permissions') }}
-        </flux:button>
+        </a>
     </div>
 
     <!-- Permission Form -->
-    <div class="bg-white dark:bg-zinc-800 shadow overflow-hidden sm:rounded-lg">
-        <form wire:submit="save" class="p-6 space-y-6">
-            <!-- Permission Information -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Name -->
-                <div>
-                    <flux:input
-                        wire:model="name"
-                        label="{{ __('Permission Name') }}"
-                        placeholder="{{ __('e.g., users.read, posts.write') }}"
-                        required
-                        autofocus
-                    />
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        {{ __('System name (use dots for namespacing)') }}
-                    </p>
+    <div class="card">
+        <div class="card-body">
+            <form wire:submit="save">
+                <!-- Permission Information -->
+                <div class="row g-3 mb-4">
+                    <!-- Name -->
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">{{ __('Permission Name') }}</label>
+                        <input
+                            type="text"
+                            id="name"
+                            wire:model="name"
+                            class="form-control @error('name') is-invalid @enderror"
+                            placeholder="{{ __('e.g., users.read, posts.write') }}"
+                            required
+                            autofocus
+                        >
+                        <div class="form-text">
+                            {{ __('System name (use dots for namespacing)') }}
+                        </div>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Display Name -->
+                    <div class="col-md-6">
+                        <label for="display_name" class="form-label">{{ __('Display Name') }}</label>
+                        <input
+                            type="text"
+                            id="display_name"
+                            wire:model="display_name"
+                            class="form-control @error('display_name') is-invalid @enderror"
+                            placeholder="{{ __('e.g., View Users, Create Posts') }}"
+                            required
+                        >
+                        <div class="form-text">
+                            {{ __('Human readable name') }}
+                        </div>
+                        @error('display_name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
-                <!-- Display Name -->
-                <div>
-                    <flux:input
-                        wire:model="display_name"
-                        label="{{ __('Display Name') }}"
-                        placeholder="{{ __('e.g., View Users, Create Posts') }}"
-                        required
-                    />
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        {{ __('Human readable name') }}
-                    </p>
-                </div>
-            </div>
+                <!-- Group and Description -->
+                <div class="row g-3 mb-4">
+                    <!-- Group -->
+                    <div class="col-md-6">
+                        <label for="group" class="form-label">{{ __('Group') }}</label>
+                        <input
+                            type="text"
+                            id="group"
+                            wire:model="group"
+                            list="existing-groups"
+                            class="form-control @error('group') is-invalid @enderror"
+                            placeholder="{{ __('e.g., users, posts, dashboard') }}"
+                            required
+                        >
+                        <datalist id="existing-groups">
+                            @foreach($existingGroups as $existingGroup)
+                                <option value="{{ $existingGroup }}">{{ ucfirst($existingGroup) }}</option>
+                            @endforeach
+                        </datalist>
+                        <div class="form-text">
+                            {{ __('Group to organize permissions') }}
+                        </div>
+                        @error('group')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-            <!-- Group and Description -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Group -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Group') }}</label>
-                    <input
-                        type="text"
-                        wire:model="group"
-                        list="existing-groups"
-                        placeholder="{{ __('e.g., users, posts, dashboard') }}"
-                        required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
-                    />
-                    <datalist id="existing-groups">
-                        @foreach($existingGroups as $existingGroup)
-                            <option value="{{ $existingGroup }}">{{ ucfirst($existingGroup) }}</option>
-                        @endforeach
-                    </datalist>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        {{ __('Group to organize permissions') }}
-                    </p>
+                    <!-- Description -->
+                    <div class="col-md-6">
+                        <label for="description" class="form-label">{{ __('Description') }}</label>
+                        <textarea
+                            id="description"
+                            wire:model="description"
+                            class="form-control @error('description') is-invalid @enderror"
+                            placeholder="{{ __('Describe what this permission allows...') }}"
+                            rows="3"
+                        ></textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
-                <!-- Description -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Description') }}</label>
-                    <textarea
-                        wire:model="description"
-                        placeholder="{{ __('Describe what this permission allows...') }}"
-                        rows="3"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
-                    ></textarea>
+                <!-- Actions -->
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a href="{{ route('permissions.index') }}" class="btn btn-outline-secondary" wire:navigate>
+                        {{ __('Cancel') }}
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Create Permission') }}
+                    </button>
                 </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-zinc-700">
-                <flux:button :href="route('permissions.index')" variant="ghost" wire:navigate>
-                    {{ __('Cancel') }}
-                </flux:button>
-                <flux:button type="submit" variant="primary">
-                    {{ __('Create Permission') }}
-                </flux:button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>

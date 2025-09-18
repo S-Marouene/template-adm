@@ -12,7 +12,6 @@ return [
     'logout' => 'Se déconnecter',
     'profile' => 'Profil',
     'password' => 'Mot de passe',
-    'appearance' => 'Apparence',
     
     // Theme
     'light' => 'Clair',

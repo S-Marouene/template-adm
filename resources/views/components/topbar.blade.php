@@ -1,105 +1,84 @@
-<div class="bg-white dark:bg-zinc-800 border-b border-gray-200 dark:border-zinc-700 px-4 py-3">
-    <div class="flex items-center justify-between max-w-7xl mx-auto">
+<nav class="navbar navbar-expand-lg topbar">
+    <div class="container-fluid">
         <!-- Left Side - Mobile Toggle -->
-        <div class="flex items-center">
-            <!-- Mobile Sidebar Toggle -->
-            <flux:sidebar.toggle class="lg:hidden mr-4" icon="bars-3" />
-            <!-- Can add breadcrumbs or page title here later -->
-        </div>
+        <button class="btn btn-outline-secondary d-lg-none me-2" type="button" data-sidebar-toggle>
+            <i class="bi bi-list"></i>
+        </button>
 
         <!-- Right Side - Actions -->
-        <div class="flex items-center space-x-4 rtl:space-x-reverse">
+        <div class="navbar-nav ms-auto d-flex flex-row align-items-center gap-2">
             <!-- Language Switcher -->
-            <flux:dropdown position="bottom" align="end">
-                <flux:button variant="ghost" size="sm">
-                    <flux:icon name="language" class="size-4" />
-                    <span class="ml-2 text-sm font-medium rtl:ml-0 rtl:mr-2">{{ strtoupper(app()->getLocale()) }}</span>
-                    <flux:icon name="chevron-down" class="ml-1 size-3 rtl:ml-0 rtl:mr-1" />
-                </flux:button>
-
-                <flux:menu class="w-40">
-                    <flux:menu.item data-locale="en">
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                            <span class="text-lg">🇺🇸</span>
-                            <span>English</span>
-                        </div>
-                    </flux:menu.item>
-                    <flux:menu.item data-locale="fr">
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                            <span class="text-lg">🇫🇷</span>
-                            <span>Français</span>
-                        </div>
-                    </flux:menu.item>
-                    <flux:menu.item data-locale="es">
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                            <span class="text-lg">🇪🇸</span>
-                            <span>Español</span>
-                        </div>
-                    </flux:menu.item>
-                    <flux:menu.item data-locale="ar">
-                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
-                            <span class="text-lg">🇸🇦</span>
-                            <span>العربية</span>
-                        </div>
-                    </flux:menu.item>
-                </flux:menu>
-            </flux:dropdown>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-globe me-1"></i>
+                    {{ strtoupper(app()->getLocale()) }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" data-locale="en">
+                        <span class="me-2">🇺🇸</span>English
+                    </a></li>
+                    <li><a class="dropdown-item" href="#" data-locale="fr">
+                        <span class="me-2">🇫🇷</span>Français
+                    </a></li>
+                    <li><a class="dropdown-item" href="#" data-locale="es">
+                        <span class="me-2">🇪🇸</span>Español
+                    </a></li>
+                    <li><a class="dropdown-item" href="#" data-locale="ar">
+                        <span class="me-2">🇸🇦</span>العربية
+                    </a></li>
+                </ul>
+            </div>
 
             <!-- Theme Toggle Button -->
-            <flux:button variant="ghost" size="sm" data-theme-toggle>
-                <flux:icon name="sun" class="size-4 theme-icon light-icon" />
-                <flux:icon name="moon" class="size-4 theme-icon dark-icon hidden" />
-                <flux:icon name="computer-desktop" class="size-4 theme-icon system-icon hidden" />
-            </flux:button>
-
-            
+            <button class="btn btn-outline-secondary btn-sm" data-theme-toggle>
+                <i class="bi bi-sun theme-icon light-icon"></i>
+                <i class="bi bi-moon theme-icon dark-icon d-none"></i>
+                <i class="bi bi-display theme-icon system-icon d-none"></i>
+            </button>
 
             <!-- User Menu -->
-            <flux:dropdown position="bottom" align="end">
-                <flux:profile
-                    class="cursor-pointer"
-                    :initials="auth()->user()->initials()"
-                />
-
-                <flux:menu class="w-48">
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                        {{ auth()->user()->initials() }}
-                                    </span>
-                                </span>
-
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                </div>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                    <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px; font-size: 0.75rem;">
+                        {{ auth()->user()->initials() }}
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" style="min-width: 200px;">
+                    <li class="px-3 py-2">
+                        <div class="d-flex align-items-center">
+                            <span class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.875rem;">
+                                {{ auth()->user()->initials() }}
+                            </span>
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold small">{{ auth()->user()->name }}</div>
+                                <div class="text-muted small">{{ auth()->user()->email }}</div>
                             </div>
                         </div>
-                    </flux:menu.radio.group>
-
-                    <flux:menu.separator />
-
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('settings.profile')" icon="user" wire:navigate>{{ __('app.profile') }}</flux:menu.item>
-                        <flux:menu.item :href="route('settings.password')" icon="key" wire:navigate>{{ __('app.password') }}</flux:menu.item>
-                        <flux:menu.item :href="route('settings.appearance')" icon="paint-brush" wire:navigate>{{ __('app.appearance') }}</flux:menu.item>
-                    </flux:menu.radio.group>
-
-                    <flux:menu.separator />
-
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('app.logout') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ route('settings.profile') }}" wire:navigate>
+                        <i class="bi bi-person me-2"></i>
+                        {{ __('app.profile') }}
+                    </a></li>
+                    <li><a class="dropdown-item" href="{{ route('settings.password') }}" wire:navigate>
+                        <i class="bi bi-key me-2"></i>
+                        {{ __('app.password') }}
+                    </a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}" class="m-0">
+                            @csrf
+                            <button type="submit" class="dropdown-item">
+                                <i class="bi bi-box-arrow-right me-2"></i>
+                                {{ __('app.logout') }}
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
+</nav>
 
 <!-- Language Switcher Component -->
 <livewire:actions.set-language />
@@ -114,20 +93,20 @@ window.applyTheme = function(theme) {
     const icons = document.querySelectorAll('.theme-icon');
     
     // Hide all theme icons
-    icons.forEach(icon => icon.classList.add('hidden'));
+    icons.forEach(icon => icon.classList.add('d-none'));
     
     if (theme === 'dark') {
-        html.classList.add('dark');
-        document.querySelector('.dark-icon')?.classList.remove('hidden');
+        html.setAttribute('data-bs-theme', 'dark');
+        document.querySelector('.dark-icon')?.classList.remove('d-none');
     } else if (theme === 'light') {
-        html.classList.remove('dark');
-        document.querySelector('.light-icon')?.classList.remove('hidden');
+        html.setAttribute('data-bs-theme', 'light');
+        document.querySelector('.light-icon')?.classList.remove('d-none');
     } else { // system
-        document.querySelector('.system-icon')?.classList.remove('hidden');
+        document.querySelector('.system-icon')?.classList.remove('d-none');
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            html.classList.add('dark');
+            html.setAttribute('data-bs-theme', 'dark');
         } else {
-            html.classList.remove('dark');
+            html.setAttribute('data-bs-theme', 'light');
         }
     }
 };
@@ -150,9 +129,9 @@ function handleTopbarClicks(e) {
     // Handle theme toggle button
     if (e.target.closest('[data-theme-toggle]')) {
         e.preventDefault();
-        // Get current theme from HTML classes
-        const isDark = document.documentElement.classList.contains('dark');
-        const nextTheme = isDark ? 'light' : 'dark';
+        // Get current theme from HTML attributes
+        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
         Livewire.dispatch('setTheme', { theme: nextTheme });
     }

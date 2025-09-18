@@ -1,90 +1,85 @@
-@import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
+/* Import Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
 
-@source '../views';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
-@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
-
-@custom-variant dark (&:where(.dark, .dark *));
-
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
-    --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
-
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
+/* Custom variables */
+:root {
+    --bs-primary: #3b82f6;
+    --bs-secondary: #64748b;
+    --bs-success: #10b981;
+    --bs-danger: #ef4444;
+    --bs-warning: #f59e0b;
+    --bs-info: #06b6d4;
+    --bs-light: #f8fafc;
+    --bs-dark: #1e293b;
 }
 
-@layer theme {
-    .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
-    }
+/* Dark theme support */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #1e293b;
+    --bs-body-color: #f1f5f9;
+    --bs-border-color: #374151;
 }
 
-@layer base {
-
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
-    }
+/* Custom styles */
+.sidebar {
+    width: 280px;
+    min-height: 100vh;
+    background-color: var(--bs-light);
+    border-right: 1px solid var(--bs-border-color);
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+[data-bs-theme="dark"] .sidebar {
+    background-color: #111827;
+    border-right-color: #374151;
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+.main-content {
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+.topbar {
+    background-color: var(--bs-light);
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 0.75rem 1.5rem;
 }
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
+[data-bs-theme="dark"] .topbar {
+    background-color: #111827;
+    border-bottom-color: #374151;
+}
 
 /* RTL Support */
 [dir="rtl"] {
     text-align: right;
 }
 
-[dir="rtl"] .flux-sidebar {
-    border-left: 1px solid var(--color-zinc-200);
+[dir="rtl"] .sidebar {
+    border-left: 1px solid var(--bs-border-color);
     border-right: none;
 }
 
-[dir="rtl"] .dark .flux-sidebar {
-    border-left-color: var(--color-zinc-700);
+/* Custom card styles */
+.dashboard-card {
+    aspect-ratio: 16/9;
+    border: 1px solid var(--bs-border-color);
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 0, 0, 0.05) 10px,
+        rgba(0, 0, 0, 0.05) 20px
+    );
 }
 
-/* RTL specific spacing adjustments */
-[dir="rtl"] .space-x-reverse > * + * {
-    margin-right: 0.5rem;
-    margin-left: 0;
-}
-
-[dir="rtl"] .rtl\:text-right {
-    text-align: right;
+[data-bs-theme="dark"] .dashboard-card {
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.05) 10px,
+        rgba(255, 255, 255, 0.05) 20px
+    );
 }
